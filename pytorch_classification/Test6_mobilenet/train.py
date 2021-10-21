@@ -13,9 +13,11 @@ from model_v2 import MobileNetV2
 def main():
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     print("using {} device.".format(device))
+    with open("a.txt", "a") as f:
+        f.write("using {} device.\n".format(device))
 
     batch_size = 16
-    epochs = 5
+    epochs = 100
 
     data_transform = {
         "train": transforms.Compose([transforms.RandomResizedCrop(224),
@@ -28,7 +30,9 @@ def main():
                                    transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])])}
 
     data_root = os.path.abspath(os.path.join(os.getcwd(), "../.."))  # get data root path
-    image_path = os.path.join(data_root, "data_set", "flower_data")  # flower data set path
+    # image_path = os.path.join(data_root, "data_set", "flower_data")  # flower data set path
+    image_path = os.path.join(data_root, "data_set", "newdata")  # flower data set path
+
     assert os.path.exists(image_path), "{} path does not exist.".format(image_path)
     train_dataset = datasets.ImageFolder(root=os.path.join(image_path, "train"),
                                          transform=data_transform["train"])
@@ -44,6 +48,8 @@ def main():
 
     nw = min([os.cpu_count(), batch_size if batch_size > 1 else 0, 8])  # number of workers
     print('Using {} dataloader workers every process'.format(nw))
+    with open("a.txt", "a") as f:
+        f.write('Using {} dataloader workers every process\n'.format(nw))
 
     train_loader = torch.utils.data.DataLoader(train_dataset,
                                                batch_size=batch_size, shuffle=True,
@@ -58,9 +64,13 @@ def main():
 
     print("using {} images for training, {} images for validation.".format(train_num,
                                                                            val_num))
+    with open("a.txt", "a") as f:
+        f.write("using {} images for training, {} images for validation.\n".format(train_num,
+                                                                           val_num))
+
 
     # create model
-    net = MobileNetV2(num_classes=5)
+    net = MobileNetV2(num_classes=10)
 
     # load pretrain weights
     # download url: https://download.pytorch.org/models/mobilenet_v2-b0353104.pth
@@ -125,12 +135,17 @@ def main():
         val_accurate = acc / val_num
         print('[epoch %d] train_loss: %.3f  val_accuracy: %.3f' %
               (epoch + 1, running_loss / train_steps, val_accurate))
+        with open("a.txt", "a") as f:
+            f.write('[epoch %d] train_loss: %.3f  val_accuracy: %.3f\n' %
+              (epoch + 1, running_loss / train_steps, val_accurate))
 
         if val_accurate > best_acc:
             best_acc = val_accurate
             torch.save(net.state_dict(), save_path)
 
-    print('Finished Training')
+    print('Finished Training\n')
+    with open("a.txt", "a") as f:
+        f.write('Finished Training')
 
 
 if __name__ == '__main__':
