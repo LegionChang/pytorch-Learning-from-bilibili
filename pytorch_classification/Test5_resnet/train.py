@@ -79,7 +79,7 @@ def main():
     params = [p for p in net.parameters() if p.requires_grad]
     optimizer = optim.Adam(params, lr=0.0001)
 
-    epochs = 3
+    epochs = 100
     best_acc = 0.0
     save_path = './resNet34.pth'
     train_steps = len(train_loader)
@@ -99,9 +99,10 @@ def main():
             # print statistics
             running_loss += loss.item()
 
-            train_bar.desc = "train epoch[{}/{}] loss:{:.3f}".format(epoch + 1,
-                                                                     epochs,
-                                                                     loss)
+            # train_bar.desc = "train epoch[{}/{}] loss:{:.3f}".format(epoch + 1,
+            #                                                          epochs,
+            #                                                          loss)
+
 
         # validate
         net.eval()
@@ -115,8 +116,8 @@ def main():
                 predict_y = torch.max(outputs, dim=1)[1]
                 acc += torch.eq(predict_y, val_labels.to(device)).sum().item()
 
-                val_bar.desc = "valid epoch[{}/{}]".format(epoch + 1,
-                                                           epochs)
+                # val_bar.desc = "valid epoch[{}/{}]".format(epoch + 1,
+                #                                            epochs)
 
         val_accurate = acc / val_num
         print('[epoch %d] train_loss: %.3f  val_accuracy: %.3f' %
