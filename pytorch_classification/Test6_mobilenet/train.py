@@ -17,7 +17,7 @@ def main():
         f.write("using {} device.\n".format(device))
 
     batch_size = 16
-    epochs = 100
+    epochs = 200
 
     data_transform = {
         "train": transforms.Compose([transforms.RandomResizedCrop(224),
