@@ -13,6 +13,8 @@ from model import vgg
 def main():
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     print("using {} device.".format(device))
+    with open("a.txt", "a") as f:
+        f.write("using {} device.".format(device))
 
     data_transform = {
         "train": transforms.Compose([transforms.RandomResizedCrop(224),
@@ -43,6 +45,8 @@ def main():
     batch_size = 32
     nw = min([os.cpu_count(), batch_size if batch_size > 1 else 0, 8])  # number of workers
     print('Using {} dataloader workers every process'.format(nw))
+    with open("a.txt", "a") as f:
+        f.write('Using {} dataloader workers every process'.format(nw))
 
     train_loader = torch.utils.data.DataLoader(train_dataset,
                                                batch_size=batch_size, shuffle=True,
@@ -56,6 +60,9 @@ def main():
                                                   num_workers=nw)
     print("using {} images for training, {} images for validation.".format(train_num,
                                                                            val_num))
+    with open("a.txt", "a") as f:
+        f.write("using {} images for training, {} images for validation.".format(train_num, val_num))
+
 
     # test_data_iter = iter(validate_loader)
     # test_image, test_label = test_data_iter.next()
@@ -104,12 +111,17 @@ def main():
         val_accurate = acc / val_num
         print('[epoch %d] train_loss: %.3f  val_accuracy: %.3f' %
               (epoch + 1, running_loss / train_steps, val_accurate))
+        with open("a.txt", "a") as f:
+            f.write('[epoch %d] train_loss: %.3f  val_accuracy: %.3f' %
+              (epoch + 1, running_loss / train_steps, val_accurate))
 
         if val_accurate > best_acc:
             best_acc = val_accurate
             torch.save(net.state_dict(), save_path)
 
     print('Finished Training')
+    with open("a.txt", "a") as f:
+        f.write('Finished Training')
 
 
 if __name__ == '__main__':
