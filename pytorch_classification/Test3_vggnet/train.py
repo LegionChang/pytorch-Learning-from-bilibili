@@ -14,7 +14,7 @@ def main():
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     print("using {} device.".format(device))
     with open("a.txt", "a") as f:
-        f.write("using {} device.".format(device))
+        f.write("using {} device.\n".format(device))
 
     data_transform = {
         "train": transforms.Compose([transforms.RandomResizedCrop(224),
@@ -46,7 +46,7 @@ def main():
     nw = min([os.cpu_count(), batch_size if batch_size > 1 else 0, 8])  # number of workers
     print('Using {} dataloader workers every process'.format(nw))
     with open("a.txt", "a") as f:
-        f.write('Using {} dataloader workers every process'.format(nw))
+        f.write('Using {} dataloader workers every process\n'.format(nw))
 
     train_loader = torch.utils.data.DataLoader(train_dataset,
                                                batch_size=batch_size, shuffle=True,
@@ -61,7 +61,7 @@ def main():
     print("using {} images for training, {} images for validation.".format(train_num,
                                                                            val_num))
     with open("a.txt", "a") as f:
-        f.write("using {} images for training, {} images for validation.".format(train_num, val_num))
+        f.write("using {} images for training, {} images for validation.\n".format(train_num, val_num))
 
 
     # test_data_iter = iter(validate_loader)
@@ -112,7 +112,7 @@ def main():
         print('[epoch %d] train_loss: %.3f  val_accuracy: %.3f' %
               (epoch + 1, running_loss / train_steps, val_accurate))
         with open("a.txt", "a") as f:
-            f.write('[epoch %d] train_loss: %.3f  val_accuracy: %.3f' %
+            f.write('[epoch %d] train_loss: %.3f  val_accuracy: %.3f\n' %
               (epoch + 1, running_loss / train_steps, val_accurate))
 
         if val_accurate > best_acc:
@@ -121,7 +121,7 @@ def main():
 
     print('Finished Training')
     with open("a.txt", "a") as f:
-        f.write('Finished Training')
+        f.write('Finished Training\n')
 
 
 if __name__ == '__main__':
