@@ -24,7 +24,9 @@ def main():
                                    transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))])}
 
     data_root = os.path.abspath(os.path.join(os.getcwd(), "../.."))  # get data root path
-    image_path = os.path.join(data_root, "data_set", "flower_data")  # flower data set path
+    # image_path = os.path.join(data_root, "data_set", "flower_data")  # flower data set path
+    image_path = os.path.join(data_root, "data_set", "newdata-8_2")  # flower data set path
+
     assert os.path.exists(image_path), "{} path does not exist.".format(image_path)
     train_dataset = datasets.ImageFolder(root=os.path.join(image_path, "train"),
                                          transform=data_transform["train"])
@@ -59,12 +61,12 @@ def main():
     # test_image, test_label = test_data_iter.next()
 
     model_name = "vgg16"
-    net = vgg(model_name=model_name, num_classes=5, init_weights=True)
+    net = vgg(model_name=model_name, num_classes=10, init_weights=True)
     net.to(device)
     loss_function = nn.CrossEntropyLoss()
     optimizer = optim.Adam(net.parameters(), lr=0.0001)
 
-    epochs = 30
+    epochs = 100
     best_acc = 0.0
     save_path = './{}Net.pth'.format(model_name)
     train_steps = len(train_loader)
