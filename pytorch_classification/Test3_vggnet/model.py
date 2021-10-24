@@ -11,6 +11,7 @@ model_urls = {
 
 
 class VGG(nn.Module):
+    # feature指模型中的卷积层结构，classifier指模型中的全连接层。
     def __init__(self, features, num_classes=1000, init_weights=False):
         super(VGG, self).__init__()
         self.features = features
