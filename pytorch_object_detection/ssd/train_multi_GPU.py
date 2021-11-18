@@ -13,7 +13,7 @@ from train_utils import GroupedBatchSampler, create_aspect_ratio_groups, init_di
 
 def create_model(num_classes):
     # https://download.pytorch.org/models/resnet50-19c8e357.pth
-    # pre_train_path = "./src/resnet50.pth"
+    # pre_train_path = "./src/resnet50-pre.pth"
     backbone = Backbone(pretrain_path=None)
     model = SSD300(backbone=backbone, num_classes=num_classes)
 

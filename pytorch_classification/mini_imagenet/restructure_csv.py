@@ -83,7 +83,7 @@ def calculate_split_info(path: str, label_dict: dict, rate: float = 0.2):
 
 
 def main():
-    data_dir = "/data/mini-imagenet/"
+    data_dir = "E:/数据集/MyDataset/mini-imagenet"
     json_path = "./imagenet_class_index.json"
 
     # load imagenet labels
