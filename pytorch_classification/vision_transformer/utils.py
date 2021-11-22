@@ -126,6 +126,7 @@ def train_one_epoch(model, optimizer, data_loader, device, epoch):
 
         pred = model(images.to(device))
         pred_classes = torch.max(pred, dim=1)[1]
+        print("prd:" + pred_classes)
         accu_num += torch.eq(pred_classes, labels.to(device)).sum()
 
         loss = loss_function(pred, labels.to(device))
