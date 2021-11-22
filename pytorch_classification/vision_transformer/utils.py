@@ -123,14 +123,11 @@ def train_one_epoch(model, optimizer, data_loader, device, epoch):
     for step, data in enumerate(data_loader):
         images, labels = data
         sample_num += images.shape[0]
-        print(sample_num)
 
         pred = model(images.to(device))
         pred_classes = torch.max(pred, dim=1)[1]
         accu_num += torch.eq(pred_classes, labels.to(device)).sum()
 
-        print(pred)
-        print(labels.to(device))
         loss = loss_function(pred, labels.to(device))
         loss.backward()
         accu_loss += loss.detach()
