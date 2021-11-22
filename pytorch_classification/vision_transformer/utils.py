@@ -142,7 +142,6 @@ def train_one_epoch(model, optimizer, data_loader, device, epoch):
 
         optimizer.step()
         optimizer.zero_grad()
-        print("over")
 
     return accu_loss.item() / (step + 1), accu_num.item() / sample_num
 
