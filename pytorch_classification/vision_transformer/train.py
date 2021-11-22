@@ -111,6 +111,7 @@ def main(args):
         tb_writer.add_scalar(tags[2], val_loss, epoch)
         tb_writer.add_scalar(tags[3], val_acc, epoch)
         tb_writer.add_scalar(tags[4], optimizer.param_groups[0]["lr"], epoch)
+        print(tags)
 
         torch.save(model.state_dict(), "./weights/model-{}.pth".format(epoch))
 
