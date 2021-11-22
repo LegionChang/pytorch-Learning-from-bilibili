@@ -45,6 +45,7 @@ def main(args):
                             transform=data_transform["val"])
 
     batch_size = args.batch_size
+    print(batch_size)
     nw = min([os.cpu_count(), batch_size if batch_size > 1 else 0, 8])  # number of workers
     print('Using {} dataloader workers every process'.format(nw))
     train_loader = torch.utils.data.DataLoader(train_dataset,
@@ -61,6 +62,7 @@ def main(args):
                                              num_workers=nw,
                                              collate_fn=val_dataset.collate_fn)
 
+    num_classes = args.num_classes
     model = create_model(num_classes=10, has_logits=False).to(device)
 
     if args.weights != "":
