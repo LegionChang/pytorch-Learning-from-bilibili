@@ -127,10 +127,10 @@ def train_one_epoch(model, optimizer, data_loader, device, epoch):
 
         pred = model(images.to(device))
         pred_classes = torch.max(pred, dim=1)[1]
-        print(pred_classes)
-        print(labels.to(device))
         accu_num += torch.eq(pred_classes, labels.to(device)).sum()
 
+        print(pred)
+        print(labels.to(device))
         loss = loss_function(pred, labels.to(device))
         loss.backward()
         accu_loss += loss.detach()
@@ -145,6 +145,7 @@ def train_one_epoch(model, optimizer, data_loader, device, epoch):
 
         optimizer.step()
         optimizer.zero_grad()
+        print("over")
 
     return accu_loss.item() / (step + 1), accu_num.item() / sample_num
 
