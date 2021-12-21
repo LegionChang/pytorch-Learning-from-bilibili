@@ -30,7 +30,7 @@ def main():
 
     data_root = os.path.abspath(os.path.join(os.getcwd(), "../.."))  # get data root path
     # image_path = os.path.join(data_root, "data_set", "flower_data")  # flower data set path
-    image_path = os.path.join(data_root, "data_set", "PlantDoc")  # flower data set path
+    image_path = os.path.join(data_root, "data_set", "PlantDoc-Dataset","train")  # flower data set path
     assert os.path.exists(image_path), "{} path does not exist.".format(image_path)
     train_dataset = datasets.ImageFolder(root=os.path.join(image_path, "train"),
                                          transform=data_transform["train"])
@@ -44,7 +44,7 @@ def main():
     with open('class_indices.json', 'w') as json_file:
         json_file.write(json_str)
 
-    batch_size = 256
+    batch_size = 64
     nw = min([os.cpu_count(), batch_size if batch_size > 1 else 0, 8])  # number of workers
     print('Using {} dataloader workers every process'.format(nw))
     with open("a.txt", "a") as f:
@@ -74,7 +74,7 @@ def main():
     net.load_state_dict(torch.load(model_weight_path, map_location=device))
     # for param in net.parameters():
     #     param.requires_grad = False
-    class_num = 28
+    class_num = 27
     # change fc layer structure
     in_channel = net.fc.in_features
     net.fc = nn.Linear(in_channel, class_num)
@@ -87,7 +87,7 @@ def main():
     params = [p for p in net.parameters() if p.requires_grad]
     optimizer = optim.Adam(params, lr=0.0001)
 
-    epochs = 100
+    epochs = 120
     best_acc = 0.0
     save_path = './resNet50.pth'
     train_steps = len(train_loader)

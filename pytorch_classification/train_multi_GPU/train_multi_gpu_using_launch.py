@@ -183,9 +183,11 @@ if __name__ == '__main__':
     # 不要改该参数，系统会自动分配
     parser.add_argument('--device', default='cuda', help='device id (i.e. 0 or 0,1 or cpu)')
     # 开启的进程数(注意不是线程),不用设置该参数，会根据nproc_per_node自动设置
-    parser.add_argument('--world-size', default=4, type=int,
+    parser.add_argument('--world-size', default=2, type=int,
                         help='number of distributed processes')
     parser.add_argument('--dist-url', default='env://', help='url used to set up distributed training')
     opt = parser.parse_args()
 
     main(opt)
+
+
