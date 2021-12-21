@@ -74,7 +74,7 @@ def main():
     net.load_state_dict(torch.load(model_weight_path, map_location=device))
     # for param in net.parameters():
     #     param.requires_grad = False
-    class_num = 27
+    class_num = 28
     # change fc layer structure
     in_channel = net.fc.in_features
     net.fc = nn.Linear(in_channel, class_num)
