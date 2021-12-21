@@ -30,7 +30,7 @@ def main():
 
     data_root = os.path.abspath(os.path.join(os.getcwd(), "../.."))  # get data root path
     # image_path = os.path.join(data_root, "data_set", "flower_data")  # flower data set path
-    image_path = os.path.join(data_root, "data_set", "PlantDoc-Dataset","train")  # flower data set path
+    image_path = os.path.join(data_root, "data_set", "PlantDoc-Dataset")  # flower data set path
     assert os.path.exists(image_path), "{} path does not exist.".format(image_path)
     train_dataset = datasets.ImageFolder(root=os.path.join(image_path, "train"),
                                          transform=data_transform["train"])
