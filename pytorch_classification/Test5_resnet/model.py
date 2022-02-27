@@ -34,6 +34,7 @@ class BasicBlock(nn.Module):
         return out
 
 
+# 1x1 -> 3x3 -> 1x1
 class Bottleneck(nn.Module):
     """
     注意：原论文中，在虚线残差结构的主分支上，第一个1x1卷积层的步距是2，第二个3x3卷积层步距是1。
@@ -57,9 +58,9 @@ class Bottleneck(nn.Module):
                                kernel_size=3, stride=stride, bias=False, padding=1)
         self.bn2 = nn.BatchNorm2d(width)
         # -----------------------------------------
-        self.conv3 = nn.Conv2d(in_channels=width, out_channels=out_channel*self.expansion,
+        self.conv3 = nn.Conv2d(in_channels=width, out_channels=out_channel * self.expansion,
                                kernel_size=1, stride=1, bias=False)  # unsqueeze channels
-        self.bn3 = nn.BatchNorm2d(out_channel*self.expansion)
+        self.bn3 = nn.BatchNorm2d(out_channel * self.expansion)
         self.relu = nn.ReLU(inplace=True)
         self.downsample = downsample
 
@@ -84,7 +85,7 @@ class Bottleneck(nn.Module):
 
         return out
 
-
+# 1x1 -> 3x3 -> 1x1 resnet50 block
 class ResNet(nn.Module):
 
     def __init__(self,

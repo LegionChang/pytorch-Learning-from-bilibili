@@ -30,7 +30,10 @@ def main():
 
     data_root = os.path.abspath(os.path.join(os.getcwd(), "../.."))  # get data root path
     # image_path = os.path.join(data_root, "data_set", "flower_data")  # flower data set path
-    image_path = os.path.join(data_root, "data_set", "PlantDoc-Dataset")  # flower data set path
+
+    # PlantDoc-Dataset
+    # PlantVillage-3_1
+    image_path = os.path.join(data_root, "data_set", "PlantDoc-Dataset")  # [可修改]
     assert os.path.exists(image_path), "{} path does not exist.".format(image_path)
     train_dataset = datasets.ImageFolder(root=os.path.join(image_path, "train"),
                                          transform=data_transform["train"])
@@ -44,7 +47,7 @@ def main():
     with open('class_indices.json', 'w') as json_file:
         json_file.write(json_str)
 
-    batch_size = 64
+    batch_size = 64 # [可修改]
     nw = min([os.cpu_count(), batch_size if batch_size > 1 else 0, 8])  # number of workers
     print('Using {} dataloader workers every process'.format(nw))
     with open("a.txt", "a") as f:
@@ -65,20 +68,41 @@ def main():
                                                                            val_num))
     with open("a.txt", "a") as f:
         f.write("using {} images for training, {} images for validation.\n".format(train_num, val_num))
-    
-    net = resnet50()
+
+    # PlantDoc-Dataset  28
+    # PlantVillage-3_1  39
+    class_num = 28  # [可修改]
+
+    net = resnet50(num_classes=class_num)
     # load pretrain weights
     # download url: https://download.pytorch.org/models/resnet34-333f7ec4.pth
-    model_weight_path = "./resnet50-pre.pth"
+    model_weight_path = "./ResNet50-100epoch-k80-PlantVillage.pth" # [可修改]
+
     assert os.path.exists(model_weight_path), "file {} does not exist.".format(model_weight_path)
-    net.load_state_dict(torch.load(model_weight_path, map_location=device))
+
+    net_weights = net.state_dict() # 读取模型中的权重名称
+    pre_weights = torch.load(model_weight_path, map_location=device)
+    del_key = []
+    for key, _ in pre_weights.items():
+        if "fc" in key:
+            del_key.append(key)
+
+    for key in del_key:
+        del pre_weights[key]
+
+    missing_keys, unexpected_keys = net.load_state_dict(pre_weights, strict=False)
+    print("[missing_keys]:", *missing_keys, sep="\n")
+    print("[unexpected_keys]:", *unexpected_keys, sep="\n")
+
+
+    # net.load_state_dict(torch.load(model_weight_path, map_location=device))
     # for param in net.parameters():
     #     param.requires_grad = False
-    class_num = 28
+
     # change fc layer structure
-    in_channel = net.fc.in_features
-    net.fc = nn.Linear(in_channel, class_num)
-    net.to(device)
+    # in_channel = net.fc.in_features
+    # net.fc = nn.Linear(in_channel, class_num)
+    # net.to(device)
 
     # define loss function
     loss_function = nn.CrossEntropyLoss()
@@ -87,9 +111,9 @@ def main():
     params = [p for p in net.parameters() if p.requires_grad]
     optimizer = optim.Adam(params, lr=0.0001)
 
-    epochs = 120
+    epochs = 100 # [可修改]
     best_acc = 0.0
-    save_path = './resNet50.pth'
+    save_path = './resNet50.pth' # [可修改]
     train_steps = len(train_loader)
     for epoch in range(epochs):
         # train
