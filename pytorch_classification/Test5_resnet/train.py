@@ -28,12 +28,12 @@ def main():
                                    transforms.ToTensor(),
                                    transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])])}
 
-    data_root = os.path.abspath(os.path.join(os.getcwd(), "../../../../data"))  # get data root path
+    data_root = os.path.abspath(os.path.join(os.getcwd(), "../../../.."))  # get data root path
     # image_path = os.path.join(data_root, "data_set", "flower_data")  # flower data set path
 
     # PlantDoc-Dataset
     # PlantVillage-3_1
-    image_path = os.path.join(data_root, "data_set", "PlantDoc-Dataset")  # [可修改]
+    image_path = os.path.join(data_root, "data", "PlantDoc-Dataset")  # [可修改]
     assert os.path.exists(image_path), "{} path does not exist.".format(image_path)
     train_dataset = datasets.ImageFolder(root=os.path.join(image_path, "train"),
                                          transform=data_transform["train"])
