@@ -28,7 +28,7 @@ def main():
                                    transforms.ToTensor(),
                                    transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])])}
 
-    data_root = os.path.abspath(os.path.join(os.getcwd(), "../.."))  # get data root path
+    data_root = os.path.abspath(os.path.join(os.getcwd(), "../../../../data"))  # get data root path
     # image_path = os.path.join(data_root, "data_set", "flower_data")  # flower data set path
 
     # PlantDoc-Dataset
@@ -47,7 +47,7 @@ def main():
     with open('class_indices.json', 'w') as json_file:
         json_file.write(json_str)
 
-    batch_size = 64 # [可修改]
+    batch_size = 512 # [可修改]
     nw = min([os.cpu_count(), batch_size if batch_size > 1 else 0, 8])  # number of workers
     print('Using {} dataloader workers every process'.format(nw))
     with open("a.txt", "a") as f:
