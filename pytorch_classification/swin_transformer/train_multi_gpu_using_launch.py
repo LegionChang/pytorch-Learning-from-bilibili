@@ -9,9 +9,6 @@ import torch.optim.lr_scheduler as lr_scheduler
 from torch.utils.tensorboard import SummaryWriter
 from torchvision import transforms, datasets
 
-from model import resnet34, resnet101
-from my_dataset import MyDataSet
-from utils import read_split_data, plot_data_loader_image
 from multi_train_utils.distributed_utils import init_distributed_mode, dist, cleanup
 from multi_train_utils.train_eval_utils import train_one_epoch, evaluate
 # 引入swin
@@ -123,12 +120,30 @@ def main(args):
     model = create_model(num_classes=args.num_classes).to(device)
 
 
-    # 如果存在预训练权重则载入
-    if os.path.exists(weights_path):
-        weights_dict = torch.load(weights_path, map_location=device)
-        load_weights_dict = {k: v for k, v in weights_dict.items()
-                             if model.state_dict()[k].numel() == v.numel()}
-        model.load_state_dict(load_weights_dict, strict=False)
+    # # 如果存在预训练权重则载入
+    # if os.path.exists(weights_path):
+    #     weights_dict = torch.load(weights_path, map_location=device)
+    #     load_weights_dict = {k: v for k, v in weights_dict.items()
+    #                          if model.state_dict()[k].numel() == v.numel()}
+    #     model.load_state_dict(load_weights_dict, strict=False)
+    # else:
+    #     checkpoint_path = os.path.join(tempfile.gettempdir(), "initial_weights.pt")
+    #     # 如果不存在预训练权重，需要将第一个进程中的权重保存，然后其他进程载入，保持初始化权重一致
+    #     if rank == 0:
+    #         torch.save(model.state_dict(), checkpoint_path)
+    #
+    #     dist.barrier()
+    #     # 这里注意，一定要指定map_location参数，否则会导致第一块GPU占用更多资源
+    #     model.load_state_dict(torch.load(checkpoint_path, map_location=device))
+
+    if args.weights != "":
+        assert os.path.exists(args.weights), "weights file: '{}' not exist.".format(args.weights)
+        weights_dict = torch.load(args.weights, map_location=device)["model"]
+        # 删除有关分类类别的权重
+        for k in list(weights_dict.keys()):
+            if "head" in k:
+                del weights_dict[k]
+        print(model.load_state_dict(weights_dict, strict=False))
     else:
         checkpoint_path = os.path.join(tempfile.gettempdir(), "initial_weights.pt")
         # 如果不存在预训练权重，需要将第一个进程中的权重保存，然后其他进程载入，保持初始化权重一致
@@ -143,7 +158,7 @@ def main(args):
     if args.freeze_layers:
         for name, para in model.named_parameters():
             # 除最后的全连接层外，其他权重全部冻结
-            if "fc" not in name:
+            if "head" not in name:
                 para.requires_grad_(False)
     else:
         # 只有训练带有BN结构的网络时使用SyncBatchNorm采用意义
@@ -206,14 +221,15 @@ def main(args):
                                      device=device,
                                      epoch=epoch)
 
-        tags = ["train_loss", "train_acc", "val_loss", "val_acc", "learning_rate"]
-        tb_writer.add_scalar(tags[0], train_loss, epoch)
-        tb_writer.add_scalar(tags[1], train_acc, epoch)
-        tb_writer.add_scalar(tags[2], val_loss, epoch)
-        tb_writer.add_scalar(tags[3], val_acc, epoch)
-        tb_writer.add_scalar(tags[4], optimizer.param_groups[0]["lr"], epoch)
+        if rank == 0:
+            tags = ["train_loss", "train_acc", "val_loss", "val_acc", "learning_rate"]
+            tb_writer.add_scalar(tags[0], train_loss, epoch)
+            tb_writer.add_scalar(tags[1], train_acc, epoch)
+            tb_writer.add_scalar(tags[2], val_loss, epoch)
+            tb_writer.add_scalar(tags[3], val_acc, epoch)
+            tb_writer.add_scalar(tags[4], optimizer.param_groups[0]["lr"], epoch)
 
-        torch.save(model.state_dict(), "./weights/model-{}.pth".format(epoch))
+            torch.save(model.state_dict(), "./weights/model-{}.pth".format(epoch))
 
     # 删除临时缓存文件
     if rank == 0:
@@ -237,10 +253,10 @@ if __name__ == '__main__':
     # http://download.tensorflow.org/example_images/flower_photos.tgz
     parser.add_argument('--data-path', type=str, default="../../data_set/PlantDoc-Dataset")
 
-    # resnet34 官方权重下载地址
-    # https://download.pytorch.org/models/resnet34-333f7ec4.pth
-    parser.add_argument('--weights', type=str, default='resNet34.pth',
+    # 预训练权重路径，如果不想载入就设置为空字符
+    parser.add_argument('--weights', type=str, default='./swin_tiny_patch4_window7_224.pth',
                         help='initial weights path')
+    # 是否冻结权重
     parser.add_argument('--freeze-layers', type=bool, default=False)
     # 不要改该参数，系统会自动分配
     parser.add_argument('--device', default='cuda', help='device id (i.e. 0 or 0,1 or cpu)')

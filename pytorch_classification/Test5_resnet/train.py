@@ -74,6 +74,7 @@ def main():
     class_num = 28  # [可修改]
 
     net = resnet50(num_classes=class_num)
+    net = net.cuda()
     # load pretrain weights
     # download url: https://download.pytorch.org/models/resnet34-333f7ec4.pth
     model_weight_path = "./ResNet50-100epoch-k80-PlantVillage.pth" # [可修改]
