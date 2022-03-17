@@ -34,7 +34,7 @@ def main():
     # PlantDoc-Dataset
     # PlantVillage-3_1
     # PlantVillage-health-3_1
-    image_path = os.path.join(data_root, "dataset", "PlantVillage-health-3_1")  # [可修改]
+    image_path = os.path.join(data_root, "dataset", "PlantVillage-Tomato-3_1")  # [可修改]
     assert os.path.exists(image_path), "{} path does not exist.".format(image_path)
     train_dataset = datasets.ImageFolder(root=os.path.join(image_path, "train"),
                                          transform=data_transform["train"])
@@ -73,7 +73,8 @@ def main():
     # PlantDoc-Dataset  28
     # PlantVillage-3_1  39
     # PlantVillage-health-3_1 12
-    class_num = 12  # [可修改]
+    # PlantVillage-Tomato-3_1 10
+    class_num = 10  # [可修改]
 
     net = resnet50(num_classes=class_num)
     net = net.cuda()
@@ -118,7 +119,7 @@ def main():
 
     epochs = 300 # [可修改]
     best_acc = 0.0
-    save_path = './resNet50-PV-health.pth' # [可修改]
+    save_path = './resNet50-PV-Tomato.pth' # [可修改]
     train_steps = len(train_loader)
     for epoch in range(epochs):
         # train
