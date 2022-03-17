@@ -9,11 +9,11 @@ from utils import GradCAM, show_cam_on_image
 
 
 def main():
-    model = models.mobilenet_v3_large(pretrained=True)
-    target_layers = [model.features[-1]]
+    # model = models.mobilenet_v3_large(pretrained=True)
+    # target_layers = [model.features[-1]]
 
-    # model = models.vgg16(pretrained=True)
-    # target_layers = [model.features]
+    model = models.vgg16(pretrained=True)
+    target_layers = [model.features]
 
     # model = models.resnet34(pretrained=True)
     # target_layers = [model.layer4]

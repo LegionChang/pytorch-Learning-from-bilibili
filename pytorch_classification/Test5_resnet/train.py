@@ -28,12 +28,13 @@ def main():
                                    transforms.ToTensor(),
                                    transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])])}
 
-    data_root = os.path.abspath(os.path.join(os.getcwd(), "../../../.."))  # get data root path
+    data_root = os.path.abspath(os.path.join(os.getcwd(), "../../../.."))  # out whole project dir
     # image_path = os.path.join(data_root, "data_set", "flower_data")  # flower data set path
 
     # PlantDoc-Dataset
     # PlantVillage-3_1
-    image_path = os.path.join(data_root, "data", "PlantDoc-Dataset")  # [可修改]
+    # PlantVillage-health-3_1
+    image_path = os.path.join(data_root, "dataset", "PlantVillage-health-3_1")  # [可修改]
     assert os.path.exists(image_path), "{} path does not exist.".format(image_path)
     train_dataset = datasets.ImageFolder(root=os.path.join(image_path, "train"),
                                          transform=data_transform["train"])
@@ -47,7 +48,7 @@ def main():
     with open('class_indices.json', 'w') as json_file:
         json_file.write(json_str)
 
-    batch_size = 512 # [可修改]
+    batch_size = 64 # [可修改]
     nw = min([os.cpu_count(), batch_size if batch_size > 1 else 0, 8])  # number of workers
     print('Using {} dataloader workers every process'.format(nw))
     with open("a.txt", "a") as f:
@@ -71,13 +72,16 @@ def main():
 
     # PlantDoc-Dataset  28
     # PlantVillage-3_1  39
-    class_num = 28  # [可修改]
+    # PlantVillage-health-3_1 12
+    class_num = 12  # [可修改]
 
     net = resnet50(num_classes=class_num)
     net = net.cuda()
     # load pretrain weights
     # download url: https://download.pytorch.org/models/resnet34-333f7ec4.pth
-    model_weight_path = "./ResNet50-100epoch-k80-PlantVillage.pth" # [可修改]
+    # imagenet pretrain: resnet34-pre.pth
+    # ResNet50-100epoch-k80-PlantVillage.pth
+    model_weight_path = "./resnet34-pre.pth" # [可修改]
 
     assert os.path.exists(model_weight_path), "file {} does not exist.".format(model_weight_path)
 
@@ -112,9 +116,9 @@ def main():
     params = [p for p in net.parameters() if p.requires_grad]
     optimizer = optim.Adam(params, lr=0.0001)
 
-    epochs = 100 # [可修改]
+    epochs = 300 # [可修改]
     best_acc = 0.0
-    save_path = './resNet50.pth' # [可修改]
+    save_path = './resNet50-PV-health.pth' # [可修改]
     train_steps = len(train_loader)
     for epoch in range(epochs):
         # train

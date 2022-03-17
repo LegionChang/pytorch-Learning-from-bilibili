@@ -1,1 +1,0 @@
-using cuda:0 device.
