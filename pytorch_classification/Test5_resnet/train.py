@@ -81,7 +81,7 @@ def main():
     # download url: https://download.pytorch.org/models/resnet34-333f7ec4.pth
     # imagenet pretrain: resnet34-pre.pth
     # ResNet50-100epoch-k80-PlantVillage.pth
-    model_weight_path = "./resnet34-pre.pth" # [可修改]
+    model_weight_path = "./resnet50-pre.pth" # [可修改]
 
     assert os.path.exists(model_weight_path), "file {} does not exist.".format(model_weight_path)
 
