@@ -28,7 +28,7 @@ def main():
                                    transforms.ToTensor(),
                                    transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])])}
 
-    data_root = os.path.abspath(os.path.join(os.getcwd(), "../../../.."))  # out whole project dir
+    data_root = os.path.abspath(os.path.join(os.getcwd(), "../../.."))  # out whole project dir
     # image_path = os.path.join(data_root, "data_set", "flower_data")  # flower data set path
 
     # PlantDoc-Dataset
