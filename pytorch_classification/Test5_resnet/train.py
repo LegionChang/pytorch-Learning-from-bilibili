@@ -48,7 +48,7 @@ def main():
     with open('class_indices.json', 'w') as json_file:
         json_file.write(json_str)
 
-    batch_size = 64 # [可修改]
+    batch_size = 128 # [可修改]
     nw = min([os.cpu_count(), batch_size if batch_size > 1 else 0, 8])  # number of workers
     print('Using {} dataloader workers every process'.format(nw))
     with open("a.txt", "a") as f:
