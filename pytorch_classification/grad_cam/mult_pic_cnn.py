@@ -19,10 +19,10 @@ def main():
 
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     # 参数 ------------------------------------------------------------------------------------------------
-    img_path = "./mult_pic_test"
+    img_path = "/home/lc/dataset/cam/ResNet-PV-Tomato"
     assert os.path.exists(img_path), "file: '{}' dose not exist.".format(img_path)
-    batch_size = 3
-    num_classes = 12    # 你的模型的分类数目
+    batch_size = 6
+    num_classes = 10    # 你的模型的分类数目
     # ------------------------------------------------------------------------------------------------------
 
     # 加载图片 ------------------------------------------------------------------------------------------------
