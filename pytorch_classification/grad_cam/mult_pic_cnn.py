@@ -34,6 +34,7 @@ def main():
     data_loader = torch.utils.data.DataLoader(dataset=raw_dataset,
                                               batch_size=batch_size,
                                               shuffle=False)
+    print("总共有{}张图片需要处理".format(len(raw_dataset)))
     # ------------------------------------------------------------------------------------------------------
 
     # 加载你的模型 ------------------------------------------------------------------------------------------------
@@ -59,6 +60,8 @@ def main():
         mk_file(os.path.join(cam_file_path, class_dic[idx]))
     # --------------------------------------------------------------------------------------------------------------
 
+    print("开始处理热力图")
+    batch_num = 1;
     for step, data in enumerate(data_loader):
         input_tensor = data[0]       # [N, C, H, W]
         target_category = data[1]   # label 列表
@@ -80,9 +83,12 @@ def main():
             save_pic_whole_path = os.path.join(save_path, '{}.JPG'.format(pic_no))
             plt.savefig(save_pic_whole_path)
             batch_idx += 1
+        batch_num += 1
+        current_progress = batch_num * batch_size // len(raw_dataset) * 100
+        print("当前已处理{}%".format(current_progress))
     print("所有图片已经处理结束")
     print("请在一下路径中查看您的热力图：")
-    print(cam_file_path)
+    print(cam_file_path + '\n')
 
 
 
