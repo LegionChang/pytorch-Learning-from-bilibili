@@ -21,7 +21,7 @@ def main():
     # 参数 ------------------------------------------------------------------------------------------------
     img_path = "/home/lc/dataset/cam/ResNet-PV-Tomato"
     assert os.path.exists(img_path), "file: '{}' dose not exist.".format(img_path)
-    batch_size = 6
+    batch_size = 12
     num_classes = 10    # 你的模型的分类数目
     model_weight_path = "./resNet50-PV-Tomato.pth"  # 模型权重文件路径
     # ------------------------------------------------------------------------------------------------------
