@@ -23,6 +23,7 @@ def main():
     assert os.path.exists(img_path), "file: '{}' dose not exist.".format(img_path)
     batch_size = 6
     num_classes = 10    # 你的模型的分类数目
+    model_weight_path = "./resNet50-PV-Tomato.pth"  # 模型权重文件路径
     # ------------------------------------------------------------------------------------------------------
 
     # 加载图片 ------------------------------------------------------------------------------------------------
@@ -37,7 +38,6 @@ def main():
 
     # 加载你的模型 ------------------------------------------------------------------------------------------------
     model = models.resnet50(num_classes=num_classes, pretrained=False)
-    model_weight_path = "./resNet50-PV-health.pth"  # [可修改]
     pre_weights = torch.load(model_weight_path, map_location=device)
     model.load_state_dict(pre_weights, strict=False)
     target_layers = [model.layer4]
