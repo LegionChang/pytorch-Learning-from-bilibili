@@ -83,9 +83,9 @@ def main():
             save_pic_whole_path = os.path.join(save_path, '{}.JPG'.format(pic_no))
             plt.savefig(save_pic_whole_path)
             batch_idx += 1
-        batch_num += 1
         current_progress = batch_num * batch_size / len(raw_dataset) * 100
         print("当前已处理{}%".format(current_progress))
+        batch_num += 1
     print("所有图片已经处理结束")
     print("请在一下路径中查看您的热力图：")
     print(cam_file_path + '\n')
