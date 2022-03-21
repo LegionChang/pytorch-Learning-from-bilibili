@@ -22,6 +22,7 @@ def main(args):
     train_images_path, train_images_label, val_images_path, val_images_label = read_split_data(args.data_path)
 
     img_size = 224
+    # 数据预处理
     data_transform = {
         "train": transforms.Compose([transforms.RandomResizedCrop(img_size),
                                      transforms.RandomHorizontalFlip(),
@@ -80,6 +81,7 @@ def main(args):
 
     pg = [p for p in model.parameters() if p.requires_grad]
     optimizer = optim.AdamW(pg, lr=args.lr, weight_decay=5E-2)
+    best_acc = 0.0
 
     for epoch in range(args.epochs):
         # train
@@ -102,12 +104,15 @@ def main(args):
         tb_writer.add_scalar(tags[3], val_acc, epoch)
         tb_writer.add_scalar(tags[4], optimizer.param_groups[0]["lr"], epoch)
 
-        torch.save(model.state_dict(), "./weights/model-{}.pth".format(epoch))
+        # torch.save(model.state_dict(), "./weights/model-{}.pth".format(epoch))
+        if val_acc > best_acc:
+            best_acc = val_acc
+            torch.save(model.state_dict(), "./weights/swin.pth")
 
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--num_classes', type=int, default=5)
+    parser.add_argument('--num_classes', type=int, default=12)
     parser.add_argument('--epochs', type=int, default=10)
     parser.add_argument('--batch-size', type=int, default=8)
     parser.add_argument('--lr', type=float, default=0.0001)
