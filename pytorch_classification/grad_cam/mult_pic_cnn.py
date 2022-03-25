@@ -61,7 +61,7 @@ def main():
     # --------------------------------------------------------------------------------------------------------------
 
     print("开始处理热力图")
-    batch_num = 1;
+    batch_num = 1;  # 用于记录进度
     for step, data in enumerate(data_loader):
         input_tensor = data[0]       # [N, C, H, W]
         target_category = data[1]   # label 列表
