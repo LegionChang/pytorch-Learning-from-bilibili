@@ -52,7 +52,7 @@ def main():
     img_size = 256
     assert img_size % 32 == 0
     # 参数 ------------------------------------------------------------------------------------------------
-    img_path = "/home/lc/dataset/cam/PlantVillage-health"
+    img_path = "/home/lc/dataset/cam/Swin-PV-Tomato"
     # img_path = "./mult_pic_test"
     assert os.path.exists(img_path), "file: '{}' dose not exist.".format(img_path)
     batch_size = 32
