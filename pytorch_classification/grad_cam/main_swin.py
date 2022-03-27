@@ -119,7 +119,7 @@ def main():
         print("当前已处理{:.2f}%".format(current_progress))
         batch_num += 1
     print("所有图片已经处理结束")
-    print("请在一下路径中查看您的热力图：")
+    print("请在以下路径中查看您的热力图：")
     print(cam_file_path + '\n')
 
 
