@@ -4,7 +4,7 @@ import argparse
 import torch
 import torch.optim as optim
 from torch.utils.tensorboard import SummaryWriter
-from torchvision import transforms
+from torchvision import transforms, datasets
 
 from my_dataset import MyDataSet
 from model import convnext_tiny as create_model
@@ -20,7 +20,7 @@ def main(args):
 
     tb_writer = SummaryWriter()
 
-    train_images_path, train_images_label, val_images_path, val_images_label = read_split_data(args.data_path)
+    # train_images_path, train_images_label, val_images_path, val_images_label = read_split_data(args.data_path)
 
     img_size = 224
     data_transform = {
@@ -33,15 +33,22 @@ def main(args):
                                    transforms.ToTensor(),
                                    transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])])}
 
-    # 实例化训练数据集
-    train_dataset = MyDataSet(images_path=train_images_path,
-                              images_class=train_images_label,
-                              transform=data_transform["train"])
+    # # 实例化训练数据集
+    # train_dataset = MyDataSet(images_path=train_images_path,
+    #                           images_class=train_images_label,
+    #                           transform=data_transform["train"])
+    #
+    # # 实例化验证数据集
+    # val_dataset = MyDataSet(images_path=val_images_path,
+    #                         images_class=val_images_label,
+    #                         transform=data_transform["val"])
 
-    # 实例化验证数据集
-    val_dataset = MyDataSet(images_path=val_images_path,
-                            images_class=val_images_label,
-                            transform=data_transform["val"])
+    image_path = args.data_path;
+    assert os.path.exists(image_path), "{} path does not exist.".format(image_path)
+    train_dataset = datasets.ImageFolder(root=os.path.join(image_path, "train"),
+                                         transform=data_transform["train"])
+    val_dataset = datasets.ImageFolder(root=os.path.join(image_path, "val"),
+                                        transform=data_transform["val"])
 
     batch_size = args.batch_size
     nw = min([os.cpu_count(), batch_size if batch_size > 1 else 0, 8])  # number of workers
@@ -115,20 +122,20 @@ def main(args):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--num_classes', type=int, default=5)
-    parser.add_argument('--epochs', type=int, default=10)
-    parser.add_argument('--batch-size', type=int, default=8)
+    parser.add_argument('--num_classes', type=int, default=39)
+    parser.add_argument('--epochs', type=int, default=300)
+    parser.add_argument('--batch-size', type=int, default=32)
     parser.add_argument('--lr', type=float, default=5e-4)
     parser.add_argument('--wd', type=float, default=5e-2)
 
     # 数据集所在根目录
     # http://download.tensorflow.org/example_images/flower_photos.tgz
     parser.add_argument('--data-path', type=str,
-                        default="/data/flower_photos")
+                        default="/home/lc/dataset/PlantVillage-3_1")
 
     # 预训练权重路径，如果不想载入就设置为空字符
     # 链接: https://pan.baidu.com/s/1aNqQW4n_RrUlWUBNlaJRHA  密码: i83t
-    parser.add_argument('--weights', type=str, default='./convnext_tiny_1k_224_ema.pth',
+    parser.add_argument('--weights', type=str, default='',
                         help='initial weights path')
     # 是否冻结head以外所有权重
     parser.add_argument('--freeze-layers', type=bool, default=False)
