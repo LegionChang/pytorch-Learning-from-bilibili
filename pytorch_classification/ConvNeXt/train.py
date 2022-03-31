@@ -120,7 +120,7 @@ def main(args):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--num_classes', type=int, default=39)
+    parser.add_argument('--num_classes', type=int, default=28)
     parser.add_argument('--epochs', type=int, default=300)
     parser.add_argument('--batch-size', type=int, default=32)
     parser.add_argument('--lr', type=float, default=5e-4)
@@ -129,11 +129,11 @@ if __name__ == '__main__':
     # 数据集所在根目录
     # http://download.tensorflow.org/example_images/flower_photos.tgz
     parser.add_argument('--data-path', type=str,
-                        default="/home/lc/dataset/PlantVillage-3_1")
+                        default="/home/lc/dataset/PlantDoc-Dataset")
 
     # 预训练权重路径，如果不想载入就设置为空字符
     # 链接: https://pan.baidu.com/s/1aNqQW4n_RrUlWUBNlaJRHA  密码: i83t
-    parser.add_argument('--weights', type=str, default='',
+    parser.add_argument('--weights', type=str, default='ConvNeXt-PV.pth',
                         help='initial weights path')
     # 是否冻结head以外所有权重
     parser.add_argument('--freeze-layers', type=bool, default=False)
